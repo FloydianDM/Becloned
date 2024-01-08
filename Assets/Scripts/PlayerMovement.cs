@@ -11,7 +11,7 @@ namespace Becloned
         private void Start()
         {
             _gameLogic = FindObjectOfType<GameLogic>();
-            _node = gameObject;
+            _node = this.gameObject;
         }
 
         public void OnPointerDown(PointerEventData eventData)

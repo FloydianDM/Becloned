@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,8 @@ namespace Becloned
         private List<GameObject> _nodes = new List<GameObject>();
         private NodeHandler _nodeHandler;
         private GridLabeler _gridLabeler;
-        public bool IsReady;
+        public bool IsReadyToCheck; // ready to check matches after initializing the game board.
+        public bool IsReadyToCountScore; // ready to count score after finding initial matvhes.
 
         private void Start()
         {  
@@ -24,7 +26,7 @@ namespace Becloned
             _firstNodeRectTransform = _firstNode.GetComponent<RectTransform>();    
 
             CreateGrid();
-            SetNodeColor();
+            StartCoroutine(SetNodeColor());
         }
 
         private void CreateGrid()
@@ -52,14 +54,18 @@ namespace Becloned
             _gridLabeler.SetLabel(_nodes);
         }
 
-        private void SetNodeColor()
+        private IEnumerator SetNodeColor()
         {
             foreach (GameObject node in _nodes)
             {
                 _nodeHandler.SetRandomColor(node);
             }
 
-            IsReady = true;            
+            IsReadyToCheck = true;
+
+            yield return new WaitForSeconds(0.2f);
+
+            IsReadyToCountScore = true;            
         }  
     }
 }
