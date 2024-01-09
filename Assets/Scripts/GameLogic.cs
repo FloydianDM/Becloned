@@ -17,6 +17,8 @@ namespace Becloned
         private NodeManager _nodeManager;
         private NodeHandler _nodeHandler;
         private ScoreManager _scoreManager;
+        private AudioPlayer _audioPlayer;
+        private bool _isMatchFound;
 
         private void Start()
         {
@@ -24,6 +26,7 @@ namespace Becloned
             _nodeManager = FindObjectOfType<NodeManager>();
             _nodeHandler = FindObjectOfType<NodeHandler>();
             _scoreManager = FindObjectOfType<ScoreManager>();
+            _audioPlayer = FindObjectOfType<AudioPlayer>();
         }
 
         private void Update()
@@ -37,6 +40,7 @@ namespace Becloned
         public void SelectElement(GameObject node)
         {
             Vector2 nodeIndex = _gridLabeler.SearchNode(node);
+            _audioPlayer.PlayNodeSFX();
 
             if (_nodeHandler.SelectedNodes[0] == null)
             {
@@ -70,6 +74,8 @@ namespace Becloned
                         _gridLabeler.LabelArray[row, column+1].tag == _gridLabeler.LabelArray[row, column+2].tag)
                     {
                         // match found
+
+                        _isMatchFound = true;
                         DeleteMatchedNodes(row, column, true);
                     }
                 }
@@ -85,6 +91,8 @@ namespace Becloned
                         _gridLabeler.LabelArray[row+1, column].tag == _gridLabeler.LabelArray[row+2, column].tag)
                     {
                         // match found
+
+                        _isMatchFound = true;
                         DeleteMatchedNodes(row, column, false);
                     }
                 }
