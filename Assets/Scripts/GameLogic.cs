@@ -7,14 +7,12 @@ namespace Becloned
 {
     // *** known bugs ***
     // check horizontal and vertical matches simultaneously (do not use return, break maybe)
-    // out of range exception on last index of array 
-
-    // TODO: Remove points if any matches could not found after changing two elements.
+    // IsMatchFound reduce points 
 
     public class GameLogic : MonoBehaviour
     {
         private GridLabeler _gridLabeler;
-        private NodeManager _nodeManager;
+        private GridManager _nodeManager;
         private NodeHandler _nodeHandler;
         private ScoreManager _scoreManager;
         private AudioPlayer _audioPlayer;
@@ -23,7 +21,7 @@ namespace Becloned
         private void Start()
         {
             _gridLabeler = FindObjectOfType<GridLabeler>();
-            _nodeManager = FindObjectOfType<NodeManager>();
+            _nodeManager = FindObjectOfType<GridManager>();
             _nodeHandler = FindObjectOfType<NodeHandler>();
             _scoreManager = FindObjectOfType<ScoreManager>();
             _audioPlayer = FindObjectOfType<AudioPlayer>();
@@ -42,18 +40,25 @@ namespace Becloned
             Vector2 nodeIndex = _gridLabeler.SearchNode(node);
             _audioPlayer.PlayNodeSFX();
 
-            if (_nodeHandler.SelectedNodes[0] == null)
+            if (_nodeHandler.SelectedNodes[0] == null)  // first selection
             {
                 _nodeHandler.SelectedNodes[0] = node;
                 Debug.Log(_nodeHandler.SelectedNodes[0].tag);
                 AddAdjacentNodes((int)nodeIndex.x, (int)nodeIndex.y);
             }
-            else if (_nodeHandler.SelectedNodes[1] == null && _nodeHandler.AdjacentNodes.Contains(node))
+            else if (_nodeHandler.SelectedNodes[1] == null && _nodeHandler.AdjacentNodes.Contains(node))    // second selection
             {
                 _nodeHandler.SelectedNodes[1] = node;
                 Debug.Log(_nodeHandler.SelectedNodes[1].tag);
                 _nodeHandler.ChangeColor(_nodeHandler.SelectedNodes[0], _nodeHandler.SelectedNodes[1]);
+
                 _nodeManager.IsReadyToCheck = true;
+
+                // reduce points if matches could not found
+                if (!_isMatchFound)
+                {
+                    AddScore(-5);
+                }
             }
             else if (_nodeHandler.SelectedNodes[1] == null && !_nodeHandler.AdjacentNodes.Contains(node))
             {
@@ -64,6 +69,8 @@ namespace Becloned
 
         public void CheckMatch()
         {
+            _isMatchFound = false;  // initial state
+
             // lateral check
 
             for (int row = 0; row < _gridLabeler.LabelArray.GetLength(0); row++)
@@ -74,7 +81,6 @@ namespace Becloned
                         _gridLabeler.LabelArray[row, column+1].tag == _gridLabeler.LabelArray[row, column+2].tag)
                     {
                         // match found
-
                         _isMatchFound = true;
                         DeleteMatchedNodes(row, column, true);
                     }
@@ -91,7 +97,6 @@ namespace Becloned
                         _gridLabeler.LabelArray[row+1, column].tag == _gridLabeler.LabelArray[row+2, column].tag)
                     {
                         // match found
-
                         _isMatchFound = true;
                         DeleteMatchedNodes(row, column, false);
                     }
@@ -124,10 +129,22 @@ namespace Becloned
 
         private void DeleteMatchedNodes(int row, int column, bool isLateral)
         {
+            int numberOfRows = _gridLabeler.LabelArray.GetLength(0);
+            int numberOfColumns = _gridLabeler.LabelArray.GetLength(1);
+
+            Invoke(nameof(PlaySuccessEffects), 0.5f);           
+
             // delete matched lateral nodes
 
-            while (true && isLateral) 
+            while (true && isLateral)
             {
+                if (column + 1 > numberOfColumns - 1)
+                {
+                    AddScore(10);
+                    
+                    return;
+                }
+
                 if (_gridLabeler.LabelArray[row, column].tag == _gridLabeler.LabelArray[row, column+1].tag)
                 {
                     ChangeNodeColor(row, column);
@@ -148,6 +165,13 @@ namespace Becloned
 
             while (true && !isLateral)
             {
+                if (row + 1 > numberOfRows - 1)
+                {
+                    AddScore(10);
+
+                    return;
+                }
+
                 if (_gridLabeler.LabelArray[row, column].tag == _gridLabeler.LabelArray[row+1, column].tag)
                 {
                     ChangeNodeColor(row, column);
@@ -162,7 +186,7 @@ namespace Becloned
 
                     return;
                 }
-            }           
+            }
         }
 
         private void ChangeNodeColor(int row, int column)
@@ -177,6 +201,11 @@ namespace Becloned
             {
                 _scoreManager.ChangeScore(points);
             }
+        }
+
+        private void PlaySuccessEffects()
+        {
+            _audioPlayer.PlaySuccessSFX();
         }
     }   
 }

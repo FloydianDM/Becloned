@@ -1,4 +1,4 @@
-using System;
+using System; 
 using UnityEngine;
 
 namespace Becloned
@@ -8,6 +8,7 @@ namespace Becloned
         // if matches found, add points, moving without finding any match causes score decrease
 
         public int Score { get; private set; }
+        public const string HighScoreKey = "HighScore";
         public event Action OnScoreChanged;
 
         private void Start()
@@ -26,6 +27,16 @@ namespace Becloned
             {
                 OnScoreChanged();
             }
+        }
+
+        private void OnDestroy()
+        {
+            int currentHighScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+
+            if (Score > currentHighScore)
+            {
+                PlayerPrefs.SetInt(HighScoreKey, Score);
+            }            
         }
     }
 }

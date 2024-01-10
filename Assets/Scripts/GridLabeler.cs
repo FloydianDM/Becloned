@@ -14,7 +14,7 @@ namespace Becloned
 
         private void InitializeLabelArray()
         {
-            NodeManager nodeManager = FindObjectOfType<NodeManager>();
+            GridManager nodeManager = FindObjectOfType<GridManager>();
 
             LabelArray = new GameObject[(int)nodeManager.GridSize.x, (int)nodeManager.GridSize.y];
         }

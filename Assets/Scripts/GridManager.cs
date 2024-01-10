@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Becloned
 {
-    public class NodeManager : MonoBehaviour
+    public class GridManager : MonoBehaviour
     {
         [SerializeField] private GameObject _nodePrefab;
         [SerializeField] private GameObject _firstNode;
@@ -60,7 +61,7 @@ namespace Becloned
             {
                 _nodeHandler.SetRandomColor(node);
             }
-
+            
             IsReadyToCheck = true;
 
             yield return new WaitForSeconds(0.2f);

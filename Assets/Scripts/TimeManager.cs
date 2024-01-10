@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Becloned
@@ -7,6 +8,7 @@ namespace Becloned
         [SerializeField] private float _gameTime;
         
         public float Timer { get; private set; }
+        public event Action OnTimeFinished;
 
         private void Start()
         {
@@ -25,6 +27,10 @@ namespace Becloned
             if (Timer <= 0)
             {
                 // add game over 
+                if (OnTimeFinished != null)
+                {
+                    OnTimeFinished();
+                }
 
                 return;
             }
