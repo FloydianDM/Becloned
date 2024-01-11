@@ -5,7 +5,7 @@ namespace Becloned
 {
     public class TimeManager : MonoBehaviour
     {
-        [SerializeField] private float _gameTime;
+        private static float _gameTime = 80f;
         
         public float Timer { get; private set; }
         public event Action OnTimeFinished;
@@ -34,6 +34,11 @@ namespace Becloned
 
                 return;
             }
+        }
+
+        public void SetTimer(float gameTime)
+        {
+            _gameTime = gameTime;
         }
     }
 }

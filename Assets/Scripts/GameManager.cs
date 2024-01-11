@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
 
     private void ProcessGameOver()
     {
+        AdManager.Instance.ShowAd(this);
+
         SceneManager.LoadScene(0);
     }
 }
