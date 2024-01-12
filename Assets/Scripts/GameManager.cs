@@ -12,6 +12,16 @@ public class GameManager : MonoBehaviour
         _timeManager.OnTimeFinished += ProcessGameOver;
     }
 
+    public void StartGame()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     private void ProcessGameOver()
     {
         AdManager.Instance.ShowAd(this);

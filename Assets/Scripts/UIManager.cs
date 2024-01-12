@@ -31,11 +31,21 @@ namespace Becloned
 
         private void ShowScore()
         {
+            if (_scoreText == null)
+            {
+                return;
+            }
+
             _scoreText.text = $"Score: {_scoreManager.Score}";
         }
 
         private void ShowTimer()
         {
+            if (_timerText == null)
+            {
+                return;
+            }
+
             double time = Math.Floor((double)_timeManager.Timer);
             _timerText.text = $"Time Left: {time}";
         }

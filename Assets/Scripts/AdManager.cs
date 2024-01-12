@@ -84,12 +84,22 @@ namespace Becloned
 
         public void OnUnityAdsShowStart(string placementId)
         {
-            throw new System.NotImplementedException();
+            // reward player - add time
+
+            if (placementId.Equals(_adUnitId))
+            {
+                AddEnhancedTime(80);
+            }
         }
 
         public void OnUnityAdsShowClick(string placementId)
         {
-            throw new System.NotImplementedException();
+            if (placementId.Equals(_adUnitId))
+            {
+                // reward player - addTime
+
+                AddEnhancedTime(100); 
+            }
         }
 
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
@@ -97,11 +107,15 @@ namespace Becloned
             if (placementId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsCompletionState.COMPLETED))
             {
                 // reward player - add time
-
-                Debug.Log("AD WATCHED!");
-                TimeManager timeManager = FindObjectOfType<TimeManager>();
-                timeManager.SetTimer(400);
+                
+                AddEnhancedTime(100);
             }
+        }
+
+        private void AddEnhancedTime(int enhancedTime)
+        {
+            TimeManager timeManager = FindObjectOfType<TimeManager>();
+            timeManager.SetEnhancedTimer(enhancedTime);
         }
 
         public void ShowAd(GameManager gameManager)

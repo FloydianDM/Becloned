@@ -5,19 +5,34 @@ namespace Becloned
 {
     public class TimeManager : MonoBehaviour
     {
-        private static float _gameTime = 80f;
+        private float _gameTime = 50f;
         
         public float Timer { get; private set; }
         public event Action OnTimeFinished;
 
+        public const string EnhancedTimeKey = "Enhanced Time";
+
         private void Start()
         {
-            Timer = _gameTime;           
+            SetTimer();
         }
 
         private void Update()
         {
             ExecuteTimer();
+        }
+
+        private void SetTimer()
+        {
+            if (PlayerPrefs.HasKey(EnhancedTimeKey))
+            {
+                Timer = PlayerPrefs.GetFloat(EnhancedTimeKey, _gameTime);
+                ClearTimer();
+            }
+            else
+            {
+                Timer = _gameTime;
+            }
         }
 
         private void ExecuteTimer()
@@ -36,9 +51,14 @@ namespace Becloned
             }
         }
 
-        public void SetTimer(float gameTime)
+        public void SetEnhancedTimer(int enhancedTime)
         {
-            _gameTime = gameTime;
+            PlayerPrefs.SetFloat(EnhancedTimeKey, enhancedTime);
+        }
+
+        private void ClearTimer()
+        {
+            PlayerPrefs.DeleteKey(EnhancedTimeKey);
         }
     }
 }
