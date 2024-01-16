@@ -22,10 +22,15 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     private void ProcessGameOver()
     {
         AdManager.Instance.ShowAd(this);
 
-        SceneManager.LoadScene(0);
+        LoadMainMenu();
     }
 }

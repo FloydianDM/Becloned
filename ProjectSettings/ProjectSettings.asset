@@ -745,7 +745,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 1
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -765,10 +771,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 38530a54-ba2e-43e1-bb93-78e57a60fd87
+  cloudProjectId: ef83cb6f-2055-45fa-8409-be1713b4ddb9
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Becloned 2024-01-11_10-21-20
+  projectName: Becloned
   organizationId: floydiandm
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

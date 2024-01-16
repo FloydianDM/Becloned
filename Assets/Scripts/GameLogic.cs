@@ -16,6 +16,7 @@ namespace Becloned
         private NodeHandler _nodeHandler;
         private ScoreManager _scoreManager;
         private AudioPlayer _audioPlayer;
+        private VFXPlayer _vfxPlayer;
         private bool _isMatchFound;
 
         private void Start()
@@ -25,6 +26,7 @@ namespace Becloned
             _nodeHandler = FindObjectOfType<NodeHandler>();
             _scoreManager = FindObjectOfType<ScoreManager>();
             _audioPlayer = FindObjectOfType<AudioPlayer>();
+            _vfxPlayer = FindObjectOfType<VFXPlayer>();
         }
 
         private void Update()
@@ -132,7 +134,7 @@ namespace Becloned
             int numberOfRows = _gridLabeler.LabelArray.GetLength(0);
             int numberOfColumns = _gridLabeler.LabelArray.GetLength(1);
 
-            Invoke(nameof(PlaySuccessEffects), 0.5f);           
+            Invoke(nameof(PlaySoundEffects), 0.5f);           
 
             // delete matched lateral nodes
 
@@ -140,22 +142,20 @@ namespace Becloned
             {
                 if (column + 1 > numberOfColumns - 1)
                 {
-                    AddScore(10);
-                    
+                    ExecuteMatchRoutine(row, column);
+
                     return;
                 }
 
                 if (_gridLabeler.LabelArray[row, column].tag == _gridLabeler.LabelArray[row, column+1].tag)
                 {
-                    ChangeNodeColor(row, column);
-                    AddScore(10);
+                    ExecuteMatchRoutine(row, column);
 
                     column++;
                 }
                 else
                 {
-                    ChangeNodeColor(row, column); // change the last matched node's color before breaking the loop
-                    AddScore(10);
+                    ExecuteMatchRoutine(row, column); // change the last matched node's color before breaking the loop
 
                     return;
                 }
@@ -167,22 +167,20 @@ namespace Becloned
             {
                 if (row + 1 > numberOfRows - 1)
                 {
-                    AddScore(10);
+                    ExecuteMatchRoutine(row, column);
 
                     return;
                 }
 
                 if (_gridLabeler.LabelArray[row, column].tag == _gridLabeler.LabelArray[row+1, column].tag)
                 {
-                    ChangeNodeColor(row, column);
-                    AddScore(10);
+                    ExecuteMatchRoutine(row, column);
 
                     row ++;
                 }
                 else
                 {
-                    ChangeNodeColor(row, column); // change the last matched node's color before breaking the loop
-                    AddScore(10);
+                    ExecuteMatchRoutine(row, column); // change the last matched node's color before breaking the loop
 
                     return;
                 }
@@ -203,9 +201,22 @@ namespace Becloned
             }
         }
 
-        private void PlaySuccessEffects()
+        private void PlaySoundEffects()
         {
             _audioPlayer.PlaySuccessSFX();
+        }
+
+        private void PlayVFX(int row, int column)
+        {
+            GameObject node = _gridLabeler.LabelArray[row, column];
+            StartCoroutine(_vfxPlayer.PlayExplosionVFX(node));   
+        }
+
+        private void ExecuteMatchRoutine(int row, int column)
+        {
+            PlayVFX(row, column);
+            ChangeNodeColor(row, column);
+            AddScore(10);
         }
     }   
 }
